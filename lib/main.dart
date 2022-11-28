@@ -5,10 +5,26 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  //const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
 
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
+  TextEditingController etInput = new TextEditingController();
+  double _inputUser = 0;
+  double _kelvin = 0;
+  double _reamur = 0;
+
+  convert() {
+    setState(() {
+      _inputUser = double.parse(etInput.text);
+      _reamur = 4 / 5 * _inputUser;
+      _kelvin = _inputUser + 273;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,15 +32,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
       home: Scaffold(
@@ -33,12 +40,50 @@ class MyApp extends StatelessWidget {
         ),
         body: Container(
           margin: EdgeInsets.all(8),
-          child: TextFormField(
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            decoration: const InputDecoration(
-              hintText: 'Masukkan Suhu dalam Celcius',
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextFormField(
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                controller: etInput,
+                decoration: const InputDecoration(
+                  hintText: 'Masukkan Suhu dalam Celcius',
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    children: [
+                      Text(
+                        'Suhu dalam Kelvin',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      Text(
+                        '$_kelvin',
+                        style: TextStyle(fontSize: 32),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text('Suhu dalam Reamur', style: TextStyle(fontSize: 16)),
+                      Text(
+                        '$_reamur',
+                        style: TextStyle(fontSize: 32),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Container(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                    onPressed: convert, child: Text("Konversi Suhu")),
+              ),
+            ],
           ),
         ),
       ),
